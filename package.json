@@ -1,0 +1,20 @@
+{
+  "name": "com.rakib.colorassistant",
+  "version": "1.0.0",
+  "displayName": "Color Assistant",
+  "description": "Create color palettes using your defined settings. One click apply different color palettes on your scene and much more",
+  "unity": "2019.1",
+  "unityRelease": "0b5",
+  "dependencies": {
+  },
+  "keywords": [
+    "color",
+    "color palette",
+    "color assistant"
+  ],
+  "author": {
+    "name": "Rakib Jahan",
+    "email": "rakibj56@gmail.com",
+    "url": "https://www.linkedin.com/in/rakibjahan"
+  }
+}
