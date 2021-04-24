@@ -21,6 +21,7 @@ namespace com.rakib.colorassistant
         [ContextMenu("Update")]
         public void UpdatePropertiesIfSettingsChanged()
         {
+            if (settings == null) return;
             for (int i = 0; i < settings.colorIds.Count; i++)
             {
                 //for the indices those already existed

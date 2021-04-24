@@ -56,43 +56,61 @@ namespace com.rakib.colorassistant
                 {
                     var path = AssetDatabase.GUIDToAssetPath(_configsGUIDs[i]);
                     var colorPalette = (ColorPalette) AssetDatabase.LoadAssetAtPath(path, typeof(ColorPalette));
-                    _colorPalettes.Add(colorPalette);
-                    _colorPalettesString.Add(colorPalette.name);
-                }
-                _activePaletteIndex = _colorPalettes.IndexOf((ColorPalette) activePalette.objectReferenceValue);
-                
-                //show palettes popup
-                _activePaletteIndex = EditorGUILayout.Popup("Palette", _activePaletteIndex, _colorPalettesString.ToArray());
-                var palette = _colorPalettes[_activePaletteIndex];
-
-                if (palette == null)
-                {
-                    activePalette.objectReferenceValue = null;
-                }
-                else if (palette.settings == _projectColorSetup.paletteSettings)
-                {
-                    if(activePalette.objectReferenceValue != palette)
+                    if (_projectColorSetup.paletteSettings == colorPalette.settings)
                     {
-                        activePalette.objectReferenceValue = palette;
-                        serializedObject.ApplyModifiedProperties();
-                        _projectColorSetup.UpdateSceneMaterialColors();
+                        _colorPalettes.Add(colorPalette);
+                        _colorPalettesString.Add(colorPalette.name);
+                    }
+                }
+
+                if (_colorPalettes.Count > 0)
+                {
+                    _activePaletteIndex = (activePalette.objectReferenceValue != null)
+                        ? _colorPalettes.IndexOf((ColorPalette) activePalette.objectReferenceValue)
+                        : 0;
+                    if (_activePaletteIndex < 0) _activePaletteIndex = 0;
+                    
+                    //show palettes popup
+                    _activePaletteIndex =
+                        EditorGUILayout.Popup("Palette", _activePaletteIndex, _colorPalettesString.ToArray());
+                    var palette = _colorPalettes[_activePaletteIndex];
+
+                    if (palette == null)
+                    {
+                        activePalette.objectReferenceValue = null;
+                    }
+                    else if (palette.settings == _projectColorSetup.paletteSettings)
+                    {
+                        if (activePalette.objectReferenceValue != palette)
+                        {
+                            activePalette.objectReferenceValue = palette;
+                            serializedObject.ApplyModifiedProperties();
+                            _projectColorSetup.UpdateSceneMaterialColors();
+                        }
+                    }
+                    else
+                    {
+                        activePalette.objectReferenceValue = null;
+                    }
+                    
+                    if (GUILayout.Button("Find"))
+                    {
+                        var path = AssetDatabase.GUIDToAssetPath(_configsGUIDs[_activePaletteIndex]);
+                        Selection.activeObject=AssetDatabase.LoadMainAssetAtPath(path);
                     }
                 }
                 else
                 {
-                    activePalette.objectReferenceValue = null;
+                    EditorGUILayout.HelpBox("Create a Palette with the given palette settings", MessageType.Error);
                 }
+                
                 serializedObject.ApplyModifiedProperties();
             }
             else
                 EditorGUILayout.HelpBox("A Palette Settings is required", MessageType.Error);
 
 
-            if (GUILayout.Button("Find"))
-            {
-                var path = AssetDatabase.GUIDToAssetPath(_configsGUIDs[_activePaletteIndex]);
-                Selection.activeObject=AssetDatabase.LoadMainAssetAtPath(path);
-            }
+            
             EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.Space();
