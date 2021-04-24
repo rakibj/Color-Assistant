@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace com.rakib.colorassistant
 {
-    [CreateAssetMenu(menuName = "Color Palette/Project Color Setup")]
+    [CreateAssetMenu(menuName = "Color Assistant/Project Color Setup")]
     public class ProjectColorSetup : SingletonScriptableObject<ProjectColorSetup>
     {
         public ColorPaletteSettings paletteSettings;

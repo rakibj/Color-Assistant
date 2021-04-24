@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace com.rakib.colorassistant
 {
-    [CreateAssetMenu(fileName = "Palette", menuName = "Color Palette/New Palette", order = 0)]
+    [CreateAssetMenu(fileName = "Palette", menuName = "Color Assistant/New Palette", order = 0)]
     public class ColorPalette : ScriptableObject
     {
         private ProjectColorSetup _projectColorSetup;
