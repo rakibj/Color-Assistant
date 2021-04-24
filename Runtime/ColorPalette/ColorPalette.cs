@@ -6,6 +6,7 @@ namespace com.rakib.colorassistant
     [CreateAssetMenu(fileName = "Palette", menuName = "Color Palette/New Palette", order = 0)]
     public class ColorPalette : ScriptableObject
     {
+        private ProjectColorSetup _projectColorSetup;
         public ColorPaletteSettings settings;
         public List<ColorProperty> colorProperties;
 
@@ -18,7 +19,7 @@ namespace com.rakib.colorassistant
         }
         
         [ContextMenu("Update")]
-        public void UpdateProperties()
+        public void UpdatePropertiesIfSettingsChanged()
         {
             for (int i = 0; i < settings.colorIds.Count; i++)
             {
@@ -39,6 +40,13 @@ namespace com.rakib.colorassistant
             }
 
             colorProperties = tempColorProperties;
+        }
+
+        public void UpdateColorsInScene()
+        {
+            _projectColorSetup = ProjectColorSetup.Instance;
+            if (_projectColorSetup == null) _projectColorSetup = Resources.FindObjectsOfTypeAll<ProjectColorSetup>()[0];
+            _projectColorSetup.UpdateSceneMaterialColors();
         }
     }
 

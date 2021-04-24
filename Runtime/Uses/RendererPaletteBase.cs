@@ -8,8 +8,12 @@ namespace com.rakib.colorassistant
 
         protected Color GetPaletteColor()
         {
+            var projectColorSetup = ProjectColorSetup.Instance;
+            if (projectColorSetup == null) 
+                projectColorSetup = Resources.FindObjectsOfTypeAll<ProjectColorSetup>()[0];
+            
             var targetColorProperty =
-                ProjectColorSetup.Instance.activePalette.colorProperties.Find(cp => cp.colorId.Equals(colorKey.value));
+                projectColorSetup.activePalette.colorProperties.Find(cp => cp.colorId.Equals(colorKey.value));
             if (targetColorProperty == null)
             {
                 Debug.LogWarning("No color property named " + colorKey.value + " found. " +

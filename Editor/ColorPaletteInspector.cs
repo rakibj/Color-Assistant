@@ -27,7 +27,7 @@ namespace com.rakib.colorassistant
                 if (_colorPalette.colorProperties.Count != _colorPalette.settings.colorIds.Count)
                 {
                     //If settings was updated, update palette
-                    _colorPalette.UpdateProperties();
+                    _colorPalette.UpdatePropertiesIfSettingsChanged();
                 }
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                 DrawColorList();
@@ -194,7 +194,13 @@ namespace com.rakib.colorassistant
         {
             EditorGUILayout.BeginHorizontal();
             
+            EditorGUI.BeginChangeCheck();
             _colorPalette.colorProperties[index].color = EditorGUILayout.ColorField(colorName, color);
+            if (EditorGUI.EndChangeCheck())
+            {
+                _colorPalette.UpdateColorsInScene();
+            }
+            
             var hasColorInClipboard = ColorUtility.TryParseHtmlString(GUIUtility.systemCopyBuffer, out var copiedColor);
             
             EditorGUI.BeginDisabledGroup(!hasColorInClipboard);
@@ -247,7 +253,7 @@ namespace com.rakib.colorassistant
         private void OnEnable()
         {
             _colorPalette = (ColorPalette) target;
-            _colorPalette.UpdateProperties();
+            _colorPalette.UpdatePropertiesIfSettingsChanged();
         }
         private void OnDisable()
         {

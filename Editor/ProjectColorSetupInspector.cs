@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,7 +13,11 @@ namespace com.rakib.colorassistant
         private ProjectColorSetup _projectColorSetup;
         private RenderGrayscale _renderGrayscale;
         private RenderBSC _renderBsc;
-        
+        private List<ColorPalette> _colorPalettes = new List<ColorPalette>();
+        private List<string> _colorPalettesString = new List<string>();
+        private string[] _configsGUIDs;
+        private int _activePaletteIndex;
+
         public override void OnInspectorGUI()
         {
             ColorAssistantUtils.DrawHeader();
@@ -36,12 +41,29 @@ namespace com.rakib.colorassistant
             serializedObject.ApplyModifiedProperties();
 
 
+            EditorGUILayout.BeginHorizontal();
             //Active Palette
             if (_projectColorSetup.paletteSettings != null)
             {
                 var activePalette = serializedObject.FindProperty("activePalette");
-                var palette = (ColorPalette) EditorGUILayout.ObjectField("Palette", _projectColorSetup.activePalette,
-                    typeof(ColorPalette), false);
+                
+                //Load available color palettes
+                _configsGUIDs = UnityEditor.AssetDatabase.FindAssets("t:" + typeof(ColorPalette).Name);
+                _colorPalettes = new List<ColorPalette>();
+                _colorPalettesString = new List<string>();
+
+                for (int i = 0; i < _configsGUIDs.Length; i++)
+                {
+                    var path = AssetDatabase.GUIDToAssetPath(_configsGUIDs[i]);
+                    var colorPalette = (ColorPalette) AssetDatabase.LoadAssetAtPath(path, typeof(ColorPalette));
+                    _colorPalettes.Add(colorPalette);
+                    _colorPalettesString.Add(colorPalette.name);
+                }
+                _activePaletteIndex = _colorPalettes.IndexOf((ColorPalette) activePalette.objectReferenceValue);
+                
+                //show palettes popup
+                _activePaletteIndex = EditorGUILayout.Popup("Palette", _activePaletteIndex, _colorPalettesString.ToArray());
+                var palette = _colorPalettes[_activePaletteIndex];
 
                 if (palette == null)
                 {
@@ -65,6 +87,14 @@ namespace com.rakib.colorassistant
             else
                 EditorGUILayout.HelpBox("A Palette Settings is required", MessageType.Error);
 
+
+            if (GUILayout.Button("Find"))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(_configsGUIDs[_activePaletteIndex]);
+                Selection.activeObject=AssetDatabase.LoadMainAssetAtPath(path);
+            }
+            EditorGUILayout.EndHorizontal();
+            
             EditorGUILayout.Space();
             //Helper
 //            if (GUILayout.Button("Force Update"))
