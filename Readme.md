@@ -47,3 +47,43 @@ It is based around 3 data types.
 - Now everytime you change color palette in Project Color Settings, the gameobject will change it's color following the key
 
 ![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619283127/Color%20Assistant/Use.png)
+
+## Custom Use cases
+At the moment, it can change colors on meshes by taking the Shader property and the material index. So basically it changes the color on the required materials. If you want to use the palette colors on your custom class then you can do that. You can even change the colors during runtime. Here you will see an example to change the color of the line renderer with your own custom class
+
+1. Create your custom script. Name it 'LinePaletteSetter.cs'. You can use any name
+2. Extend it from 'RendererPaletteBase'
+3. Override the function 'SetPaletteColor'
+4. You have access to the field 'colorKey' which you need to set from inspector
+5. You have access to 'GetPaletteColor()' using which you can get the active palette color. Use the color that this function returns to set the color of whatever you want in the overriden function of Step 3
+```
+public class LinePaletteSetter : RendererPaletteBase
+{
+    public LineRenderer lineRenderer;
+    public override void SetPaletteColor()
+    {
+        lineRenderer.startColor = GetPaletteColor();
+        lineRenderer.endColor = GetPaletteColor();
+    }
+}
+```
+6. Add LineRenderer and make necessary adjustments on the inspector. Use 'Alt+C' to open up Project Color Setup and Reassign the color palette to make the changes take effect.
+
+## Importing palettes from websites
+Import color palettes from any websites simply by creating a color palette and then copying it as CSS. Most popular website in this sector is Adobe Colors. You can create color palettes in different ways and save it in your Library. Then just copy the palette as CSS
+![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619286665/Color%20Assistant/AdobeColor.png)
+Open any color palette inspector and you will see the colors show up in the clipboard section
+![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619286664/Color%20Assistant/ClipboardfromAbodeColors.png)
+Now click on 'Pin the colors' and then copy and paste colors as you like into your main palette
+
+## Modifying the final color
+You can modify the final color by selecting the Project Color Setup and then checking values on Final Color Modifier section
+1. Check Contrast: It turns the color to Grayscale. Use this to check the contrast between foreground and background
+
+![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619286985/Color%20Assistant/CheckContrast.png)
+
+2. Final Color Modifier: Use this to change the brightness, saturation and contrast of the final color. 
+
+![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619286986/Color%20Assistant/FinalColor.png)
+
+These are automatically disabled in builds as each take one extra draw calls
