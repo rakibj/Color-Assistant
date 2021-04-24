@@ -24,6 +24,7 @@ It is based around 3 data types.
 ##### Step 1: Creating Color Palette Settings
 - Create -> Color Assistant -> New Palette Settings
 - Define palette keys. Each key will correspond to a color type. For example: 'Player' can be a key which will contain the color of the player and following the key different palettes will contain different player color
+
 ![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619283127/Color%20Assistant/ColorPaletteSettings.png)
 
 ##### Step 2: Creating Color Palette
@@ -31,15 +32,18 @@ It is based around 3 data types.
 - Assign the Palette Settings you created earlier on 'Settings'
 - The 'Main Color Palette' will be generated following the keys of the 'Settings'
 - Assign different colors on the palette!
+
 ![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619283127/Color%20Assistant/ColorPalette.png)
 
 ##### Step 3: Creating Project Color Setup
 - Create -> Color Assistant -> Project Color Setup. Put it in 'Resources' folder. There should be only one instance of this per project. So create this once only
 - Press Alt+C or (Rakib -> Select Color Assistant) to open up Project Color Settings Settings. Assign the 'Palette Settings' and a 'Color Palette' that follows that settings
+
 ![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619283128/Color%20Assistant/ProjectColorSetup.png)
 
 ##### Step 4: Using
 - Create any gameobject. Assign a new material
 - Add Component -> Color Assistant -> Mesh Color Setter. Pick a Color Key. It will show you all the keys from your active 'Color Palette Settings' on the 'Project Color Setup'
 - Now everytime you change color palette in Project Color Settings, the gameobject will change it's color following the key
+
 ![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619283127/Color%20Assistant/Use.png)
