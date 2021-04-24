@@ -1,8 +1,16 @@
 # Color Assistant
 ## _Fast color solution for hyper casual games_
 
+# Table of contents
+1. [Features](#features)
+2. [Theory](#theory)
+3. [Tutorial](#tutorial)
+4. [Custom Use Cases](#custom)
+5. [Importing palettes from websites](#importcss)
+6. [Modifying the final color](#modifyfinal)
 
-## Features
+
+## Features <a name="features"></a>
 
 - Create color palettes with your own color setup
 - Create color palettes online and copy the whole palette at once
@@ -10,7 +18,7 @@
 - Check color contrast 
 - Modify the final HSV color value
 
-## Theory
+## Theory <a name="theory"></a>
 
 It is based around 3 data types.
 - **Color Palette Settings:** It contains the definition of the color palette. It has a list of keys that defines what colors will be present in color palette. So for a simple level with a player and a floor there can be 2 keys in color palette settings. 'Player' and 'Floor'
@@ -19,7 +27,7 @@ It is based around 3 data types.
 
 - **Project Color Setup:** It contains the reference of the active 'Color Palette Settings' of the current project and the active 'Color Palette'
 
-## Tutorial
+## Tutorial <a name="tutorial"></a>
 
 ### Step 1: Creating Color Palette Settings
 - Create -> Color Assistant -> New Palette Settings
@@ -48,7 +56,7 @@ It is based around 3 data types.
 
 ![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619283127/Color%20Assistant/Use.png)
 
-## Custom Use cases
+## Custom Use cases <a name="custom"></a>
 At the moment, it can change colors on meshes by taking the Shader property and the material index. So basically it changes the color on the required materials. If you want to use the palette colors on your custom class then you can do that. You can even change the colors during runtime. Here you will see an example to change the color of the line renderer with your own custom class
 
 1. Create your custom script. Name it 'LinePaletteSetter.cs'. You can use any name
@@ -69,14 +77,14 @@ public class LinePaletteSetter : RendererPaletteBase
 ```
 6. Add LineRenderer and make necessary adjustments on the inspector. Use 'Alt+C' to open up Project Color Setup and Reassign the color palette to make the changes take effect.
 
-## Importing palettes from websites
+## Importing palettes from websites <a name="importcss"></a>
 Import color palettes from any websites simply by creating a color palette and then copying it as CSS. Most popular website in this sector is Adobe Colors. You can create color palettes in different ways and save it in your Library. Then just copy the palette as CSS
 ![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619286665/Color%20Assistant/AdobeColor.png)
 Open any color palette inspector and you will see the colors show up in the clipboard section
 ![N|Solid](https://res.cloudinary.com/rakib56/image/upload/v1619286664/Color%20Assistant/ClipboardfromAbodeColors.png)
 Now click on 'Pin the colors' and then copy and paste colors as you like into your main palette
 
-## Modifying the final color
+## Modifying the final color <a name="modifyfinal"></a>
 You can modify the final color by selecting the Project Color Setup and then checking values on Final Color Modifier section
 1. Check Contrast: It turns the color to Grayscale. Use this to check the contrast between foreground and background
 
