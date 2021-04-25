@@ -95,8 +95,15 @@ namespace com.rakib.colorassistant
                     
                     if (GUILayout.Button("Find"))
                     {
-                        var path = AssetDatabase.GUIDToAssetPath(_configsGUIDs[_activePaletteIndex]);
-                        Selection.activeObject=AssetDatabase.LoadMainAssetAtPath(path);
+                        for (int i = 0; i < _configsGUIDs.Length; i++)
+                        {
+                            var path = AssetDatabase.GUIDToAssetPath(_configsGUIDs[i]);
+                            var colorPalette = (ColorPalette) AssetDatabase.LoadAssetAtPath(path, typeof(ColorPalette));
+                            if (_projectColorSetup.activePalette == colorPalette)
+                            {
+                                Selection.activeObject=AssetDatabase.LoadMainAssetAtPath(path);
+                            }
+                        }
                     }
                 }
                 else
