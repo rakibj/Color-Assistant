@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ProjectColorSettings
   m_EditorClassIdentifier: 
   paletteSettings: {fileID: 11400000, guid: 8fde258106a1baa47b977de3b1cfdb4a, type: 2}
-  activePalette: {fileID: 11400000, guid: 5b5da301a08f2ad4191aaa4522fa56a2, type: 2}
+  activePalette: {fileID: 11400000, guid: f53790c6a112b8e4c91e9d5ba5b72deb, type: 2}
   checkContrast: 0
   modifyProperties: 0
   brightness: 1.54
