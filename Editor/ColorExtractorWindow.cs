@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace com.rakib.colorassistant
         private Texture2D _paletteTex;
         private bool _drawTempTex = false;
         private List<Color> _filteredColors;
-        private float _tolerance = 0.1f;
+        private float _tolerance = 0.5f;
 
         /// <summary>
         /// Returns true if its considered a unique color
@@ -58,28 +59,29 @@ namespace com.rakib.colorassistant
                     ProcessTempTexture();
                 }
                 EditorGUILayout.EndHorizontal();
-                ProcessAndDrawPalette();
+                ProcessAndDrawFilteredPalette(_filteredColors);
                 EditorGUILayout.EndVertical();
-                //DestroyImmediate(_tempTex);
             }
+            
         }
 
-        private void ProcessAndDrawPalette()
+        
+        private void ProcessAndDrawFilteredPalette(List<Color> filteredColors)
         {
-            if (_filteredColors != null && _filteredColors.Count > 0)
+            if (filteredColors != null && filteredColors.Count > 0)
             {
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField("Gradient (" + _filteredColors.Count + " colors)");
+                EditorGUILayout.LabelField("Gradient (" + filteredColors.Count + " colors)");
                 var targetWidth = 200f;
-                _paletteWidth = Mathf.FloorToInt(targetWidth / (float) _filteredColors.Count) * _filteredColors.Count;
+                _paletteWidth = Mathf.FloorToInt(targetWidth / (float) filteredColors.Count) * filteredColors.Count;
                 _paletteTex = new Texture2D(_paletteWidth, 1);
                 var colors = new Color[_paletteWidth];
-                var bandWidth = Mathf.FloorToInt((float) _paletteWidth / (float) _filteredColors.Count);
-                for (int i = 0; i < _filteredColors.Count; i++)
+                var bandWidth = Mathf.FloorToInt((float) _paletteWidth / (float) filteredColors.Count);
+                for (int i = 0; i < filteredColors.Count; i++)
                 {
                     for (int j = 0; j < bandWidth; j++)
                     {
-                        colors[i * bandWidth + j] = _filteredColors[i];
+                        colors[i * bandWidth + j] = filteredColors[i];
                     }
                 }
 
@@ -127,7 +129,6 @@ namespace com.rakib.colorassistant
             var unique = Math.Abs(compareTo.r - pixel.r) > _tolerance || Math.Abs(compareTo.g - pixel.g) > _tolerance || Math.Abs(compareTo.b - pixel.b) > _tolerance;
             return unique;
         }
-        
         private bool EuclideanFilter(Color compareTo, Color pixel)
         {
             var rDiff = (compareTo.r - pixel.r) * 256;
@@ -161,6 +162,7 @@ namespace com.rakib.colorassistant
             _tempTex = new Texture2D(_texture.width, _texture.height, _texture.format, false);
             _tempTex.SetPixels(_texture.GetPixels());
             _tempTex.Apply();
+            _tempTex.Compress(false);
         }
         private void ResizeAndDrawTexture()
         {
