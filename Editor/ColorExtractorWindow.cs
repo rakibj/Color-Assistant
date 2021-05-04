@@ -41,11 +41,11 @@ namespace com.rakib.colorassistant
             ColorAssistantUtils.DrawHeader();
             
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-
             var buttonText = _texture == null ? "Import Image" : "Replace Image";
             if (GUILayout.Button(buttonText))
-                GetTextureFromExplorer();
-            if(_texture) ResizeAndDrawTexture();
+                _texture = ColorAssistantUtils.GetTextureFromExplorer();
+            if (_texture)
+                (_width, _texRect) = ColorAssistantUtils.DrawTexture(_texture, _maxHeight);
             EditorGUILayout.EndVertical();
 
             if (_texture)
@@ -55,49 +55,20 @@ namespace com.rakib.colorassistant
                 _tolerance = EditorGUILayout.Slider("Tolerance Filter",_tolerance, 0.1f, 1f);
                 if (GUILayout.Button("Process"))
                 {
-                    CreateTempTexture();
+                    _tempTex = ColorAssistantUtils.GetCopyTexture(_texture);
                     ProcessTempTexture();
                 }
                 EditorGUILayout.EndHorizontal();
-                ProcessAndDrawFilteredPalette(_filteredColors);
+                ColorAssistantUtils.DrawColorPalette(_filteredColors, 200, 20);
                 EditorGUILayout.EndVertical();
             }
-            
         }
-
         
-        private void ProcessAndDrawFilteredPalette(List<Color> filteredColors)
-        {
-            if (filteredColors != null && filteredColors.Count > 0)
-            {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField("Gradient (" + filteredColors.Count + " colors)");
-                var targetWidth = 200f;
-                _paletteWidth = Mathf.FloorToInt(targetWidth / (float) filteredColors.Count) * filteredColors.Count;
-                _paletteTex = new Texture2D(_paletteWidth, 1);
-                var colors = new Color[_paletteWidth];
-                var bandWidth = Mathf.FloorToInt((float) _paletteWidth / (float) filteredColors.Count);
-                for (int i = 0; i < filteredColors.Count; i++)
-                {
-                    for (int j = 0; j < bandWidth; j++)
-                    {
-                        colors[i * bandWidth + j] = filteredColors[i];
-                    }
-                }
-
-                _paletteTex.SetPixels(colors);
-                _paletteTex.Apply();
-                var paletteTexRect = GUILayoutUtility.GetRect(_paletteTex.width, 20, GUILayout.ExpandWidth(false),
-                    GUILayout.ExpandHeight(false));
-                EditorGUI.DrawPreviewTexture(paletteTexRect, _paletteTex);
-                EditorGUILayout.EndHorizontal();
-            }
-        }
         private void ProcessTempTexture()
         {
             var pixelColors = new List<Color>();
             _filteredColors = new List<Color>();
-            pixelColors = LoadPixelList(pixelColors);
+            pixelColors = ColorAssistantUtils.GetColors(_tempTex);
             _filteredColors = FilterPixels(pixelColors, ToleranceFilter);
             Debug.Log("Processing Complete! Colors Extracted: " + _filteredColors.Count);
         }
@@ -143,45 +114,6 @@ namespace com.rakib.colorassistant
 //            Debug.Log("distanceSq "+ distanceSq);
             var toleranceValue = 1.05f;
             return Math.Abs(distanceSq) > toleranceValue;
-        }
-        private List<Color> LoadPixelList(List<Color> pixelList)
-        {
-            for (var i = 0; i < _tempTex.width; i++)
-            {
-                for (var j = 0; j < _tempTex.height; j++)
-                {
-                    var pixel = _tempTex.GetPixel(i, j);
-                    pixelList.Add(pixel);
-                }
-            }
-
-            return pixelList;
-        }
-        private void CreateTempTexture()
-        {
-            _tempTex = new Texture2D(_texture.width, _texture.height, _texture.format, false);
-            _tempTex.SetPixels(_texture.GetPixels());
-            _tempTex.Apply();
-            _tempTex.Compress(false);
-        }
-        private void ResizeAndDrawTexture()
-        {
-            var resolutionFactor = (float) _maxHeight / _texture.height;
-            _width = Mathf.FloorToInt(_texture.width * resolutionFactor);
-            _texRect = GUILayoutUtility.GetRect(_width, _maxHeight, GUILayout.ExpandWidth(false),
-                GUILayout.ExpandHeight(false));
-            EditorGUI.DrawPreviewTexture(_texRect, _texture);
-        }
-        private void GetTextureFromExplorer()
-        {
-            string path = EditorUtility.OpenFilePanel("Select a png", "", "png");
-            if (path.Length != 0)
-            {
-                _texture = new Texture2D(500, 500);
-                var fileContent = File.ReadAllBytes(path);
-                _texture.LoadImage(fileContent);
-            }
-            
         }
     }
 }
