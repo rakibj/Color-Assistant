@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace com.rakib.colorassistant
 {
@@ -22,6 +23,7 @@ namespace com.rakib.colorassistant
         private int[,] _pixelSps;
         private int _totalVotes;
         public int TotalVotes => _totalVotes;
+        public delegate bool IsInPalette(Color color);
 
         public Bin(){}
         public Bin(int dimension, Rect rect)
@@ -75,7 +77,7 @@ namespace com.rakib.colorassistant
                 }
             }
         }
-        public (Color, int) GetPixelMaxSp()
+        public (Color, int) GetPixelMaxSp(IsInPalette isInPalette)
         {
             var maxSp = -Mathf.Infinity;
             var pixel = Color.black;
@@ -83,7 +85,7 @@ namespace com.rakib.colorassistant
             {
                 for (int j = 0; j < dimension; j++)
                 {
-                    if (_pixelSps[i, j] > maxSp)
+                    if (_pixelSps[i, j] > maxSp && !isInPalette(pixelVotes[i,j].pixel))
                     {
                         maxSp = _pixelSps[i, j];
                         pixel = pixelVotes[i, j].pixel;
